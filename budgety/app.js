@@ -1,6 +1,6 @@
 // TASKS:
 // 1. Move controllers into their own files.
-// 2. Add in some way of saving/storing the information.
+// 2. Add in some way of saving/storing the information (local storage?)
 
 
 var dataController = (function() {
@@ -327,7 +327,7 @@ var UIController = (function() {
 
 // GLOBAL CONTROL
 var controller = (function(dataCtrl, UICtrl) {
-  var strings = UIController.getDOMStrings();
+  var strings = UICtrl.getDOMStrings();
 
   var setupEventListeners =  function() {
     document.querySelector(strings.inputBtn).addEventListener(`click`, ctrlAddItem);
@@ -340,31 +340,31 @@ var controller = (function(dataCtrl, UICtrl) {
     });
 
     document.querySelector(strings.container).addEventListener(`click`, ctrlDeleteItem);
-    document.querySelector(strings.inputType).addEventListener(`change`, UIController.typeChanged);
+    document.querySelector(strings.inputType).addEventListener(`change`, UICtrl.typeChanged);
   }
 
   var updateBudget = function() {
     var budget;
 
     // 1. Calculate budget
-    dataController.calculateBudget();
+    dataCtrl.calculateBudget();
 
     // 2. Return the budget
-    budget = dataController.getBudget();
+    budget = dataCtrl.getBudget();
 
     // 3. Display the budget on the UI
-    UIController.displayBudget(budget);
+    UICtrl.displayBudget(budget);
   }
 
   var updatePercentages = function() {
     // 1. Calculate percentages
-    dataController.calculatePercentages();
+    dataCtrl.calculatePercentages();
 
     // 2. Read percentages from the budget controller
-    var percentages = dataController.getPercentages();
+    var percentages = dataCtrl.getPercentages();
 
     // 3. Update the UI with the new percentages
-    UIController.displayPercentages(percentages);
+    UICtrl.displayPercentages(percentages);
   }
 
   // On new entry this happens:
@@ -375,13 +375,13 @@ var controller = (function(dataCtrl, UICtrl) {
     
     if (input.description !== `` && !isNaN(input.value) && input.value > 0) {
       // 2. Add item to budget controller
-      newItem = dataController.addItem(input.type, input.description, input.value);
+      newItem = dataCtrl.addItem(input.type, input.description, input.value);
 
       // 3. Add he item to the UI
-      UIController.addListItem(newItem, input.type);
+      UICtrl.addListItem(newItem, input.type);
 
       // 4. Clear the fields
-      UIController.clearFields();
+      UICtrl.clearFields();
 
      // 5. Calculate and update budget
       updateBudget();
@@ -404,10 +404,10 @@ var controller = (function(dataCtrl, UICtrl) {
       ID = parseInt(splitID[1]);
 
       // 1. Delete item from data structure
-      dataController.deleteItem(type, ID);
+      dataCtrl.deleteItem(type, ID);
 
       // 2. Delete item from UI
-      UIController.deleteListItem(itemID);
+      UICtrl.deleteListItem(itemID);
 
       // 3. Update and show the new budget
       updateBudget();
@@ -416,8 +416,8 @@ var controller = (function(dataCtrl, UICtrl) {
 
   return {
     init: function() {
-      UIController.displayDate();
-      UIController.displayBudget({
+      UICtrl.displayDate();
+      UICtrl.displayBudget({
         budget: 0,
         totalInc: 0,
         totalExp: 0,
